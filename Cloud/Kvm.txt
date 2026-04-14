@@ -1,0 +1,101 @@
+Practical 6
+----------------------------------------------------------------------------
+
+Aim: Installation and Configuration of Virtual Machine Using KVM 
+
+Steps : 1) Go to Control Panel -> Programs -> Turn Windows features on or off -> 
+	   Enable the following features :
+		i.   Virtual Machine Platform 
+		ii.  Windows Hypervisor Platform
+		iii. Windows Subsystem for Linux
+
+	2) Go to Microsoft Store -> Search for Ubuntu -> Download it.
+
+	3) Open Ubuntu and set Username and password to it.
+
+	4) Perform the following Commands :
+
+$ sudo grep -c "svm\|vmx" /proc/cpuinfo
+
+-> Upgrade and update the Ubuntu System
+$ sudo apt update && sudo apt upgrade
+
+-> Check if virtualization is enabled, it not install then type
+$ sudo apt install cpu-checker
+
+-> To check virtualization is enabled or not
+$ kvm-ok
+
+-> Install KVM (Kernel Virtual Machine)
+$ sudo apt install qemu-kvm virt-manager libvirt-daemon-system virtinst libvirt-clients bridge-utils
+
+-> Enable the virtualization
+$ sudo systemctl enable --now libvirtd
+
+-> Start libvirtd daemon using command 
+$ sudo systemctl start libvirtd
+
+-> Verify the libvirtd
+$ sudo systemctl status libvirtd
+
+$ sudo adduser anujprjpt06 libvirt
+
+$ sudo adduser anujprjpt06 kvm
+
+----------------------------------------------------------------------------
+
+Practical No.03 -> Create and Manage KVM Virtual Manager 
+
+$ virt-manager 
+
+Steps :-
+1) Make new virtual machine
+2) Click on Manual Install -> Forward
+3) Search Operating System -> Windows 10 -> Forward
+4) Memory and CPU settings will be as it is .
+5) Click on forward and finish.
+
+----------------------------------------------------------------------------
+
+Practical No.09 -> User Management in Cloud.
+
+Steps :
+1) Open Ubuntu 
+2) Perform commands 
+
+-> Adding a user on Ubuntu
+$ sudo adduser anuj
+
+-> To add a System user 
+$ sudo adduser --system anuj
+
+$ sudo usermod -aG sudo anuj
+
+-> Login as new user
+$ su anuj
+
+
+-> Adding a group on Ubuntu
+$ sudo addgroup student
+
+-> Adding a user to group on Ubuntu
+$ sudo usermod -aG student anuj
+
+-> Removing the user from a group on Ubuntu
+$ sudo deluser anuj student
+
+-> Removing a user on Ubuntu
+$ sudo deluser anuj
+
+-> Deleting a group on Ubuntu
+$ sudo delgroup student
+
+-> Listing all the user on Ubuntu
+$ cut --delimiter=: --field=1 /etc/passwd
+
+-> Listing all the groups on Ubuntu
+$ cut --delimiter=: --fields=1 /etc/group
+
+-> Listing all user in a group on ubuntu
+$ cat /etc/group | cut --delimiter=: --fields=1,4 | grep GROUPNA
+
