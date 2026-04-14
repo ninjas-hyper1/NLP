@@ -1,0 +1,28 @@
+import nltk
+
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('averaged_perceptron_tagger_eng')
+
+from nltk import pos_tag, word_tokenize, RegexpParser
+
+sample_text = "The quick brown fox jumps over the lazy dog"
+
+tagged = pos_tag(word_tokenize(sample_text))
+print("POS Tagged:\n", tagged)
+
+chunker = RegexpParser(r"""
+    NP: {<DT>?<JJ>*<NN.*>}      # Noun Phrase
+    P: {<IN>}                  # Preposition
+    V: {<V.*>}                 # Verb
+    PP: {<P><NP>}              # Prepositional Phrase
+    VP: {<V><NP|PP>*}          # Verb Phrase
+""")
+
+output = chunker.parse(tagged)
+
+print("\nAfter Extracting:\n")
+print(output)
+
+print(output)
+#output.draw()   # optional: opens tree diagram

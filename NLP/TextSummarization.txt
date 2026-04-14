@@ -1,0 +1,75 @@
+import nltk
+import heapq
+import re
+
+# Download required resources (run once)
+nltk.download('punkt_tab')
+nltk.download('stopwords')
+
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize, sent_tokenize
+
+
+def summarize_text(text, num_sentences=2):
+    # Clean text
+    text = re.sub(r'\s+', ' ', text)
+
+    # Tokenize words
+    words = word_tokenize(text.lower())
+
+    # Remove stopwords
+    stop_words = set(stopwords.words("english"))
+    filtered_words = [
+        word for word in words
+        if word.isalnum() and word not in stop_words
+    ]
+
+    # Calculate word frequency
+    word_frequencies = {}
+
+    for word in filtered_words:
+        if word not in word_frequencies:
+            word_frequencies[word] = 1
+        else:
+            word_frequencies[word] += 1
+
+    # Score sentences
+    sentences = sent_tokenize(text)
+    sentence_scores = {}
+
+    for sentence in sentences:
+        for word in word_tokenize(sentence.lower()):
+            if word in word_frequencies:
+                if len(sentence.split(' ')) < 30:
+                    if sentence not in sentence_scores:
+                        sentence_scores[sentence] = word_frequencies[word]
+                    else:
+                        sentence_scores[sentence] += word_frequencies[word]
+
+    # Get top sentences
+    summary_sentences = heapq.nlargest(
+        num_sentences,
+        sentence_scores,
+        key=sentence_scores.get
+    )
+
+    return " ".join(summary_sentences)
+
+
+# Sample Text
+sample_text = """
+Artificial Intelligence (AI) is transforming the world in many ways.
+It is used in healthcare, education, finance, and transportation.
+AI helps doctors diagnose diseases faster and more accurately.
+
+In education, it provides personalized learning experiences.
+
+Self-driving cars are another example of AI technology.
+Despite its benefits, AI also raises ethical concerns.
+"""
+
+# Generate summary
+summary = summarize_text(sample_text, 2)
+
+print("Original Text:\n", sample_text)
+print("\nSummary:\n", summary, "\n")

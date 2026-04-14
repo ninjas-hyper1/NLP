@@ -1,0 +1,18 @@
+import nltk
+
+txt = "This is the first sentence . it contains multiple sentence .the third sentence is last one "
+
+nltk.download('punkt_tab')
+
+sentences = nltk.sent_tokenize(txt)
+word_token = [nltk.word_tokenize(sentence) for sentence in sentences]
+
+print("Original text : ", txt)
+
+print("\nSentence segmentation : ")
+for i, sentence in enumerate(sentences):
+    print(f"sentence{i + 1}: {sentence}")
+
+print("\nWord formation : ")
+for i, tokens in enumerate(word_token):
+    print(f"Token in sentence{i + 1}: {tokens}")

@@ -1,0 +1,36 @@
+import random
+
+corpus = "This is a simple example of a trigram model. You can use your own text data for better results."
+words = corpus.split()
+
+trigrams = {}
+
+for i in range(len(words) - 2):
+    word1, word2, word3 = words[i], words[i + 1], words[i + 2]
+    trigram = (word1, word2)
+
+    if trigram in trigrams:
+        trigrams[trigram].append(word3)
+    else:
+        trigrams[trigram] = [word3]
+
+
+def generate_text(starting_words, length=50):
+    current_words = list(starting_words)
+    generated_text = current_words
+
+    for _ in range(length):
+        if tuple(current_words) not in trigrams:
+            break
+
+        next_word = random.choice(trigrams.get(tuple(current_words), []))
+        generated_text.append(next_word)
+        current_words = [current_words[1], next_word]
+
+    return " ".join(generated_text)
+
+
+starting_words = ["This", "is"]
+generated_text = generate_text(starting_words, length=30)
+
+print(generated_text)

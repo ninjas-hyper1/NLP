@@ -1,0 +1,55 @@
+import nltk
+from nltk import pos_tag, RegexpParser
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+
+nltk.download('punkt')
+nltk.download('stopwords')
+nltk.download('maxent_ne_chunker')
+nltk.download('words')
+
+
+def preprocess_text(text):
+    # Tokenize the text
+    tokens = word_tokenize(text)
+
+    # Remove stopwords
+    stop_words = set(stopwords.words('english'))
+    filtered_tokens = [
+        word for word in tokens
+        if word.lower() not in stop_words
+    ]
+
+    return filtered_tokens
+
+
+def dependency_parsing(text):
+    # Preprocess the text
+    tokens = preprocess_text(text)
+
+    # Part-of-speech tagging
+    tagged_tokens = pos_tag(tokens)
+
+    # Define a grammar for chunking
+    grammar = r"""
+        NP: {<DT>?<JJ>*<NN>}   # Noun Phrase
+        PP: {<IN><NP>}         # Prepositional Phrase
+        VP: {<VB.*><NP|PP>*}   # Verb Phrase
+    """
+
+    # Create a chunk parser with the defined grammar
+    chunk_parser = RegexpParser(grammar)
+
+    # Apply chunk parser to the tagged tokens
+    tree = chunk_parser.parse(tagged_tokens)
+
+    # Print the dependency tree
+    print(tree)
+
+
+if __name__ == "__main__":
+    # Example text for dependency parsing
+    input_text = "Dependency parsing is a technique used in natural language processing."
+
+    # Perform dependency parsing
+    dependency_parsing(input_text)
